@@ -1,4 +1,7 @@
+
 FROM php:7.4-fpm
+
+RUN usermod -u 1000 www-data
 
 ARG TIMEZONE
 
@@ -6,7 +9,7 @@ ARG TIMEZONE
 COPY ./php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y vim git unzip \
+RUN apt-get update && apt-get install -y procps zip unzip libzip-dev libpq-dev vim git unzip \
     && pecl install \
     apcu \
     xdebug-3.1.0 \
@@ -14,13 +17,13 @@ RUN apt-get update && apt-get install -y vim git unzip \
     && docker-php-ext-enable \
     apcu \
     xdebug \
-    redis
+    redis 
 
 # Install PHP extensions Type docker-php-ext-install to see available extensions
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mysqli zip
 
 # Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.7.2 /usr/bin/composer /usr/bin/composer
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone
@@ -31,6 +34,7 @@ RUN "date"
 COPY ./xdebug.ini /tmp/xdebug.ini
 RUN cat /tmp/xdebug.ini >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN rm /tmp/xdebug.ini
+COPY ./error_reporting.ini /usr/local/etc/php/conf.d/error_reporting 
 
 # Set working directory
 WORKDIR /var/www

@@ -107,10 +107,3 @@ Finally, flush privileges to apply the changes.
 ```bash
     FLUSH PRIVILEGES;
 ```
-## Editing permissions on Linux
-
-- If you work on linux and cannot edit some of the project files right after the first installation, you can run `docker-compose run --rm app chown -R $(id -u):$(id -g) .` to set yourselft as owner of the project files that were created by the docker container.
-
-```bash
-    docker-compose run --rm app chown -R $(id -u):$(id -g) . 
-```
