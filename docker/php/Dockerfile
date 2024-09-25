@@ -1,7 +1,7 @@
 
 FROM php:7.4-fpm
 
-RUN usermod -u 1000 www-data
+# RUN usermod -u 1000 www-data
 
 ARG TIMEZONE
 
@@ -34,7 +34,6 @@ RUN "date"
 COPY ./xdebug.ini /tmp/xdebug.ini
 RUN cat /tmp/xdebug.ini >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN rm /tmp/xdebug.ini
-COPY ./error_reporting.ini /usr/local/etc/php/conf.d/error_reporting 
 
 # Set working directory
 WORKDIR /var/www
